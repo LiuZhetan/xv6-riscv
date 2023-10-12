@@ -40,3 +40,49 @@ make qemu-gdb
 ```
 
 ![img](pictures/file-ls.png)
+
+## VSCode开发环境
+
+1. 无法找到头文件
+
+    改一下头文件的引用方式，并不会影响编译，例如：#include "kernel/stat.h" 改为 #include "../kernel/stat.h"。
+
+2. 使用gdb-multiarch调试内核
+
+    先安装Native Debug拓展：
+
+    ![img](./pictures/naive-debug.jpg)
+
+    以调试ls命令为例，在launch.json中添加以下内容，参考[这里](https://nnfw.readthedocs.io/en/stable/howto/how-to-remote-debugging-with-visual-studio-code.html#:~:text=Install%20gdb-multiarch%20%C2%B6%20Install%20gdb-multiarch%20%24%20sudo%20apt,-%3E%20Add%20configuration%20-%3E%20GDB%3A%20Connect%20to%20gdbserver):
+
+    ```json
+    {
+    "version": "0.2.0",
+    "configurations": [
+            {
+                "type": "gdb",
+                "request": "attach",
+                "name": "Attach to gdbserver",
+                "gdbpath": "/usr/bin/gdb-multiarch",
+                "executable": "./user/_ls",
+                "target": "localhost:26000",
+                "remote": true,
+                "printCalls": true,
+                "cwd": "${workspaceRoot}",
+                "valuesFormatting": "parseText"
+            }
+        ]
+    }
+    ```
+
+    然后在一个终端中启动调试服务器
+
+    ```shell
+    make qemu-gdb
+    # 在xv6中运行命令
+    (xv6) ls
+    ```
+
+    设置断点，运行调试：
+
+    ![img](pictures/debug-ls.png)
