@@ -1,0 +1,42 @@
+# 记录学习过程的问题和解决过程
+
+## 环境准备
+
+参考[这里](https://zhuanlan.zhihu.com/p/509296983)
+
+riscv64-linux-gnu-gcc版本不要太高(riscv64-linux-gnu-gcc-12会无法编译)
+
+## GDB准备
+
+首先在一个窗口中运行:
+
+```shell
+make qemu-gdb
+```
+
+![img](pictures/make-gdb.png)
+
+然后再另外一个窗口(相同目录下)中运行gdb-multiarch:
+
+![img](pictures/gdb-multiarch.png)
+
+在gdb中连接qemu的debug服务器：
+
+```shell
+(gdb) remote debugging using localhost:26000
+```
+
+使用file命令加载可执行调试符号，以调试ls用户命令为例子（参考这篇[文章](https://zhuanlan.zhihu.com/p/342402097)）:
+
+```shell
+(gdb) file user/_ls
+(gdb) b main
+(gdb) c
+```
+
+```shell
+# 在xv6的shell中
+(xv6) ls
+```
+
+![img](pictures/file-ls.png)
