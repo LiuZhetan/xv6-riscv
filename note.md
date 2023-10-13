@@ -86,3 +86,51 @@ make qemu-gdb
     设置断点，运行调试：
 
     ![img](pictures/debug-ls.png)
+
+    如果不想每次都手动启动qemu的gdb服务器可以设置tasks.json
+
+    ```json
+    {
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "label": "preDebug",
+                "command": "make qemu-gdb",
+                "type": "shell",
+                "isBackground": true
+            }
+        ]
+    }
+    ```
+
+    然后在"configurations"列表中增加以下内容：
+
+    ```json
+    {
+        "name": "(gdb) 启动",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/user/_ls",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${fileDirname}",
+        "environment": [],
+        "externalConsole": false,
+        "preLaunchTask": "preDebug",
+        "MIMode": "gdb",
+        "miDebuggerPath": "/usr/bin/gdb-multiarch",
+        "miDebuggerServerAddress":"localhost:26000",
+        "setupCommands": [
+            {
+                "description": "为 gdb 启用整齐打印",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+            },
+            {
+                "description": "将反汇编风格设置为 Intel",
+                "text": "-gdb-set disassembly-flavor intel",
+                "ignoreFailures": true
+            }
+        ]
+    }
+    ```
