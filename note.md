@@ -134,3 +134,11 @@ make qemu-gdb
         ]
     }
     ```
+
+## lab1 bugs review
+
+1. Exec系统调用Bug
+
+    argv必须以一个0结尾，否则可能无法正确执行。
+
+![img](pictures/exec-man.png)
