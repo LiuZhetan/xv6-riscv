@@ -58,7 +58,7 @@ argv_max_len: size of args
 line_limit: return value from parse_args
 */
 int xargs(char *argv[], int init_len, int argv_max_len, int line_limit) {
-    int i = 0, n;
+    int i = 0, n = 0;
     char buf[1024], slot[2];                   // use slot to judge "\\n"
     // see buf as a table of string, 
     // line_count point to row and argc point to column
@@ -67,8 +67,16 @@ int xargs(char *argv[], int init_len, int argv_max_len, int line_limit) {
     argc = init_len;
     int arg_pointer = 0;
 
-    if ((n = read(0, buf, sizeof(buf))) > 0) {
-        // read data from stdin or pipe
+    // read pipe to the end
+    int n_t;
+    char* read_ptr = buf;
+    while ((n_t = read(0, read_ptr, sizeof(buf) - n)) > 0) {
+        read_ptr += n_t;
+        n += n_t;
+    }
+
+    // if ((n = read(0, buf, sizeof(buf))) > 0)
+    if (1) {
         if (n > (sizeof buf) - 1) {
             fprintf(2,"args list is two long, at most %d bytes, buffer overflow!\n", (sizeof buf) - 1);
             return 0;
