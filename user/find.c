@@ -66,7 +66,10 @@ find(char *path, char *name)
         continue;
       }
       if ((name[0] == '\0') || strcmp(de.name,name)==0)
-        printf("%s %d %d %d\n", fmtname(buf), st.type, st.ino, st.size);
+        // printf("%s %d %d %d\n", fmtname(buf), st.type, st.ino, st.size);
+        printf("%s\n",buf);
+      if ((de.name[0] != '.') && st.type == T_DIR)
+        find(buf,name);
     }
     break;
   }
